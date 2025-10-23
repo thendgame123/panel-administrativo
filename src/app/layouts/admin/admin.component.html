@@ -1,0 +1,11 @@
+<div class="dashboard-layout">
+  <app-header (logout)="handleLogout()"></app-header>
+  
+  <app-nav></app-nav>
+  
+  <main class="dashboard-content">
+    <div class="dashboard-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

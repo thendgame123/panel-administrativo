@@ -1,0 +1,143 @@
+
+<div class="users-content">
+  <div class="users-wrapper">
+    <div class="user-header">
+      <div class="header-left">
+        <h2 class="page-title">Gestión de Usuarios</h2>
+        <p class="page-description">Administra los usuarios del sistema</p>
+      </div>
+      <div class="header-right">
+        <button class="btn-nuevo-content" [routerLink]="['/admin','users','nuevo']">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Nuevo Usuario
+        </button>
+      </div>
+    </div>
+
+    <!-- Filtro de búsqueda -->
+    <div class="search-card">
+      <div class="search-input-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Buscar por usuario, nombre o rol..."
+          [(ngModel)]="searchText"
+          (input)="onSearchChange()"
+        />
+      </div>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-header-content">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          <span>Usuarios Registrados ({{ filteredUsers.length }})</span>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th class="th-usuario">Usuario</th>
+              <th class="th-nombre">Nombre Completo</th>
+              <th class="th-rol">Rol</th>
+              <th class="th-estado">Estado</th>
+              <th class="th-acciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers" class="table-row">
+              <!-- Usuario -->
+              <td class="td-usuario">
+                <div class="user-info">
+                  <div class="user-avatar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                  <span class="username">{{ user.username }}</span>
+                </div>
+              </td>
+
+              <!-- Nombre Completo -->
+              <td class="td-nombre">
+                <span class="fullname">{{ user.fullName }}</span>
+              </td>
+
+              <!-- Rol -->
+              <td class="td-rol">
+                <span 
+                  class="role-badge" 
+                  [class.role-admin]="user.role === 'Administrador'"
+                  [class.role-reporteria]="user.role === 'Reportería'"
+                  [class.role-usuario]="user.role === 'Usuario'"
+                >
+                  {{ user.role }}
+                </span>
+              </td>
+
+              <!-- Estado -->
+              <td class="td-estado">
+                <span 
+                  class="estado-badge" 
+                  [class.activo]="user.isActive" 
+                  [class.inactivo]="!user.isActive"
+                >
+                  {{ user.isActive ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+
+              <!-- Acciones -->
+              <td class="td-acciones">
+                <div class="acciones-wrapper">
+                  <button 
+                    class="btn-action btn-editar" 
+                    (click)="onEditarUsuario(user)" 
+                    title="Editar usuario"
+                    type="button"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    class="btn-action btn-eliminar" 
+                    (click)="onEliminarUsuario(user)" 
+                    title="Eliminar usuario"
+                    type="button"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer de la tabla -->
+      <div class="table-footer" *ngIf="filteredUsers.length === 0">
+        <p class="no-results">No se encontraron usuarios</p>
+      </div>
+    </div>
+  </div>
+</div>

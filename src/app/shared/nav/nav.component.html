@@ -1,0 +1,25 @@
+<nav class="navigation-container">
+  <div class="nav-wrapper">
+    <ul class="nav-list">
+      <li *ngFor="let item of navItems" class="nav-item" routerLinkActive="active">
+        <a [routerLink]="item.route" class="nav-link">
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+            class="nav-icon"
+          >
+            <path [attr.d]="getIconPath(item.icon)"></path>
+          </svg>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

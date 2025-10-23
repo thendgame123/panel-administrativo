@@ -1,0 +1,63 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-container">
+      <div class="logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"></path>
+          <rect x="4" y="12" width="16" height="8"></rect>
+          <path d="M20 8V6a2 2 0 0 0-2-2h-4"></path>
+          <path d="M4 8V6a2 2 0 0 1 2-2h4"></path>
+        </svg>
+      </div>
+      <h1 class="title">Panel Interactivo de Buques</h1>
+    </div>
+
+    <div class="login-form-container">
+      <h2 class="form-title">Iniciar Sesión</h2>
+      <p class="form-subtitle">Accede al panel administrativo</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input 
+              type="text" 
+              id="email" 
+              class="form-control" 
+              placeholder="Ingresa tu correo electrónico"
+              formControlName="email"
+              [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input 
+              type="password" 
+              id="password" 
+              class="form-control" 
+              placeholder="Ingresa tu contraseña"
+              formControlName="password"
+              [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
+            >
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="!form.valid">
+          Iniciar Sesión
+        </button>
+        <div class="text-danger small mt-3" *ngIf="errorMsg">{{ errorMsg }}</div>
+      </form>
+    </div>
+  </div>
+</div>

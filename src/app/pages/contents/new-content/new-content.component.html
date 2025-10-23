@@ -1,0 +1,533 @@
+<div class="contents-content">
+  <div class="contents-wrapper">
+    <div class="content-header">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Volver</span>
+      </button>
+      <div class="header-left">
+        <h2 class="page-title">Nuevo Contenido</h2>
+        <p class="page-description">Completa los datos para crear nuevo contenido</p>
+      </div>
+    </div>
+
+    <div class="content-body">
+      <form [formGroup]="contentForm" (ngSubmit)="onSubmit()">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div class="card-header-content">
+              <h3 class="card-title">Información del Contenido</h3>
+            </div>
+          </div>
+          <div class="card-body">
+            
+            <!-- Categoría -->
+            <div class="form-group">
+              <label for="categoria" class="form-label">
+                Categoría <span class="required">*</span>
+              </label>
+              <select 
+                id="categoria" 
+                class="form-control form-select"
+                [class.is-invalid]="contentForm.get('categoria')?.invalid && (contentForm.get('categoria')?.dirty || contentForm.get('categoria')?.touched || submitted)"
+                formControlName="categoria"
+              >
+                <option value="">Selecciona una categoría</option>
+                <option value="Seguridad y Emergencias">Seguridad y Emergencias</option>
+                <option value="Mantenimiento Naval">Mantenimiento Naval</option>
+                <option value="Navegación">Navegación</option>
+                <option value="Entretenimiento">Entretenimiento</option>
+              </select>
+              <div class="invalid-feedback" *ngIf="contentForm.get('categoria')?.invalid && (contentForm.get('categoria')?.dirty || contentForm.get('categoria')?.touched || submitted)">
+                La categoría es requerida
+              </div>
+            </div>
+
+            <!-- Título -->
+            <div class="form-group">
+              <label for="titulo" class="form-label">
+                Título <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="titulo" 
+                class="form-control"
+                [class.is-invalid]="contentForm.get('titulo')?.invalid && (contentForm.get('titulo')?.dirty || contentForm.get('titulo')?.touched || submitted)"
+                placeholder="Ej: Protocolo de Evacuación de Emergencia"
+                formControlName="titulo"
+              />
+              <div class="invalid-feedback" *ngIf="contentForm.get('titulo')?.invalid && (contentForm.get('titulo')?.dirty || contentForm.get('titulo')?.touched || submitted)">
+                El título es requerido
+              </div>
+            </div>
+
+            <!-- Descripción Corta -->
+            <div class="form-group">
+              <label for="descripcion" class="form-label">Descripción Corta</label>
+              <textarea 
+                id="descripcion" 
+                class="form-control"
+                rows="3"
+                placeholder="Resumen breve del contenido..."
+                formControlName="descripcion"
+              ></textarea>
+            </div>
+
+            <!-- Editor de Contenido -->
+            <div class="form-group">
+              <div class="editor-tabs">
+                <button 
+                  type="button" 
+                  class="editor-tab" 
+                  [class.active]="activeTab === 'visual'"
+                  (click)="switchTab('visual')"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Editor Visual
+                </button>
+                <button 
+                  type="button" 
+                  class="editor-tab" 
+                  [class.active]="activeTab === 'html'"
+                  (click)="switchTab('html')"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                  HTML
+                </button>
+                <button 
+                  type="button" 
+                  class="editor-tab" 
+                  [class.active]="activeTab === 'preview'"
+                  (click)="switchTab('preview')"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Previsualizar
+                </button>
+              </div>
+
+              <!-- Editor Visual -->
+              <div class="editor-content" *ngIf="activeTab === 'visual'">
+                <quill-editor 
+                  formControlName="htmlContent"
+                  [modules]="editorModules"
+                  placeholder="Escribe el contenido completo aquí..."
+                  class="quill-editor"
+                ></quill-editor>
+                <p class="form-text">Usa el editor visual para dar formato al contenido. No se permiten imágenes ni videos.</p>
+              </div>
+
+              <!-- Editor HTML -->
+              <div class="editor-content" *ngIf="activeTab === 'html'">
+                <textarea 
+                  class="html-editor"
+                  formControlName="htmlContent"
+                  placeholder="<h3>Título</h3><p>Contenido...</p>"
+                  rows="15"
+                ></textarea>
+                <div class="invalid-feedback" *ngIf="htmlError">
+                  {{ htmlError }}
+                </div>
+                <p class="form-text">Escribe código HTML válido. No se permiten etiquetas de imágenes, videos o audio.</p>
+              </div>
+
+              <!-- Preview -->
+              <div class="editor-content preview-content" *ngIf="activeTab === 'preview'">
+                <div class="preview-box" [innerHTML]="sanitizedContent"></div>
+              </div>
+            </div>
+
+            <!-- Posición de Layout -->
+            <div class="form-group">
+              <label class="form-label">
+                Posición de Layout
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="14" 
+                  height="14" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  stroke-width="2" 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  class="info-icon"
+                  title="Posicionamiento del contenido multimedia y texto en el panel interactivo"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </label>
+              <div class="layout-options">
+                <label class="layout-card" [class.selected]="contentForm.get('layoutPosition')?.value === 'left'">
+                  <input type="radio" formControlName="layoutPosition" value="left" />
+                  <div class="layout-visual">
+                    <div class="layout-dot"></div>
+                  </div>
+                  <span class="layout-name">Layout Izquierda</span>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="14" 
+                    height="14" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    class="info-icon-small"
+                    title="Imagen o video a la izquierda con texto"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </label>
+
+                <label class="layout-card" [class.selected]="contentForm.get('layoutPosition')?.value === 'right'">
+                  <input type="radio" formControlName="layoutPosition" value="right" />
+                  <div class="layout-visual">
+                    <div class="layout-dot"></div>
+                  </div>
+                  <span class="layout-name">Layout Derecha</span>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="14" 
+                    height="14" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    class="info-icon-small"
+                    title="Imagen o video a la derecha con texto"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </label>
+
+                <label class="layout-card" [class.selected]="contentForm.get('layoutPosition')?.value === 'center'">
+                  <input type="radio" formControlName="layoutPosition" value="center" />
+                  <div class="layout-visual">
+                    <div class="layout-dot"></div>
+                  </div>
+                  <span class="layout-name">Layout Centro</span>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="14" 
+                    height="14" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    class="info-icon-small"
+                    title="Imagen o video superior y con texto debajo"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </label>
+
+                <label class="layout-card" [class.selected]="contentForm.get('layoutPosition')?.value === 'video'">
+                  <input type="radio" formControlName="layoutPosition" value="video" />
+                  <div class="layout-visual">
+                    <div class="layout-dot"></div>
+                  </div>
+                  <span class="layout-name">Layout Solo Video</span>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="14" 
+                    height="14" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    stroke-width="2" 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    class="info-icon-small"
+                    title="Solo título y video"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </label>
+              </div>
+            </div>
+
+            <!-- Fecha de Vigencia -->
+            <div class="form-group">
+              <div class="vigencia-header">
+                <label class="form-label">Fecha de Vigencia</label>
+                <label class="toggle-switch-inline">
+                  <input 
+                    type="checkbox" 
+                    formControlName="vigenciaActiva"
+                    (change)="onVigenciaToggle()"
+                  />
+                  <span class="toggle-slider-inline"></span>
+                  <span class="toggle-label-inline">Activado</span>
+                </label>
+              </div>
+
+              <div class="date-inputs" *ngIf="contentForm.get('vigenciaActiva')?.value">
+                <div class="date-group">
+                  <label for="fechaInicio" class="form-label-small">Fecha de Inicio</label>
+                  <input 
+                    type="date" 
+                    id="fechaInicio" 
+                    class="form-control form-date"
+                    formControlName="fechaInicio"
+                  />
+                </div>
+                <div class="date-group">
+                  <label for="fechaFin" class="form-label-small">Fecha de Fin</label>
+                  <input 
+                    type="date" 
+                    id="fechaFin" 
+                    class="form-control form-date"
+                    formControlName="fechaFin"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Video -->
+            <div class="form-group">
+              <label for="videoUrl" class="form-label">Video (Opcional)</label>
+              <input 
+                type="url" 
+                id="videoUrl" 
+                class="form-control"
+                placeholder="https://ejemplo.com/video.mp4"
+                formControlName="videoUrl"
+              />
+              <div class="file-upload-wrapper">
+                <button type="button" class="btn-upload" (click)="videoInput.click()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  Subir Video
+                </button>
+                <input 
+                  #videoInput
+                  type="file" 
+                  accept="video/*"
+                  style="display: none"
+                  (change)="onVideoSelected($event)"
+                />
+              </div>
+            </div>
+
+            <!-- Imagen -->
+            <div class="form-group">
+              <label for="imagenUrl" class="form-label">Imagen (Opcional)</label>
+              <input 
+                type="url" 
+                id="imagenUrl" 
+                class="form-control"
+                placeholder="https://ejemplo.com/imagen.jpg"
+                [(ngModel)]="imageUrl"
+                [ngModelOptions]="{standalone: true}"
+              />
+              <div class="file-upload-wrapper">
+                <button type="button" class="btn-upload" (click)="imageInput.click()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  Subir Imagen
+                </button>
+                <input 
+                  #imageInput
+                  type="file" 
+                  accept="image/*"
+                  style="display: none"
+                  (change)="onImageSelected($event)"
+                />
+                <span class="file-name" *ngIf="selectedImageFile">{{ selectedImageFile.name }}</span>
+              </div>
+              
+              <!-- Preview de imagen -->
+              <div class="image-preview-container" *ngIf="imagePreviewUrl">
+                <div class="image-preview-wrapper">
+                  <img [src]="imagePreviewUrl" alt="Preview" class="image-preview" />
+                  <button type="button" class="btn-remove-image" (click)="removeImage()" title="Eliminar imagen">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PDF (NUEVO - Solo estas 25 líneas) -->
+            <div class="form-group">
+              <label for="pdfUrl" class="form-label">PDF (Opcional)</label>
+              <input 
+                type="url" 
+                id="pdfUrl" 
+                class="form-control"
+                placeholder="https://ejemplo.com/documento.pdf"
+                [(ngModel)]="pdfUrl"
+                [ngModelOptions]="{standalone: true}"
+              />
+              <div class="file-upload-wrapper">
+                <button type="button" class="btn-upload" (click)="pdfInput.click()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  Subir PDF
+                </button>
+                <input 
+                  #pdfInput
+                  type="file" 
+                  accept=".pdf"
+                  style="display: none"
+                  (change)="onPdfSelected($event)"
+                />
+                <span class="file-name" *ngIf="selectedPdfFile">{{ selectedPdfFile.name }}</span>
+              </div>
+
+              <!-- Preview de PDF -->
+              <div class="pdf-preview-container" *ngIf="selectedPdfFile">
+                <div class="pdf-preview-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pdf-icon">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                  </svg>
+                  <span class="pdf-name">{{ selectedPdfFile.name }}</span>
+                  <button type="button" class="btn-remove-pdf" (click)="removePdf()" title="Eliminar PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ubicaciones -->
+            <div class="form-group">
+              <label class="form-label">
+                Ubicaciones donde se mostrará <span class="required">*</span>
+              </label>
+
+              <!-- Checkbox TODOS (NUEVO - Solo 13 líneas) -->
+              <div class="checkbox-grid">
+                <label class="checkbox-card checkbox-card-all">
+                  <input 
+                    type="checkbox" 
+                    [checked]="selectAllShips"
+                    (change)="onSelectAllShips($event)"
+                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>TODOS</span>
+                </label>
+              </div>
+
+              <!-- Checkboxes individuales -->
+              <div class="checkbox-grid">
+                <label class="checkbox-card" *ngFor="let ship of ships">
+                  <input 
+                    type="checkbox" 
+                    [checked]="selectedShips.includes(ship)"
+                    (change)="onShipChange(ship, $event)"
+                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path>
+                    <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"></path>
+                    <path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"></path>
+                    <path d="M12 10v4"></path>
+                    <path d="M12 2v3"></path>
+                  </svg>
+                  <span>{{ ship }}</span>
+                </label>
+              </div>
+              <div class="invalid-feedback" [class.d-block]="submitted && selectedShips.length === 0">
+                Debe seleccionar al menos una ubicación
+              </div>
+            </div>
+
+            <!-- Visibilidad -->
+            <div class="form-group">
+              <label class="form-label">Visibilidad</label>
+              <div class="toggle-wrapper">
+                <label class="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    formControlName="isActive"
+                  />
+                  <span class="toggle-slider"></span>
+                </label>
+                <div class="toggle-content">
+                  <span class="toggle-title">Contenido Activo</span>
+                  <span class="toggle-description">Se mostrará en las pantallas de las ubicaciones seleccionadas</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Protector de Pantalla -->
+            <div class="form-group">
+              <label class="form-label">Protector de Pantalla</label>
+              <div class="toggle-wrapper">
+                <label class="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    formControlName="isScreensaver"
+                  />
+                  <span class="toggle-slider"></span>
+                </label>
+                <div class="toggle-content">
+                  <span class="toggle-title">No usar como Protector de Pantalla</span>
+                  <span class="toggle-description">Este contenido no se usará como protector de pantalla</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Crear Contenido
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

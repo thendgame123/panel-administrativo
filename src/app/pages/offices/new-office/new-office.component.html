@@ -1,0 +1,100 @@
+<div class="offices-content">
+  <div class="offices-wrapper">
+    <div class="office-header">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Volver</span>
+      </button>
+      <div class="header-left">
+        <h2 class="page-title">Crear Oficina</h2>
+        <p class="page-description">Completa los datos para crear una oficina</p>
+      </div>
+    </div>
+
+    <div class="office-body">
+      <form [formGroup]="officeForm" (ngSubmit)="onSubmit()">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <div class="card-header-content">
+              <h3 class="card-title">Información de la Oficina</h3>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <!-- Oficina (Deshabilitado) -->
+            <div class="form-group">
+              <label for="name" class="form-label">Oficina</label>
+              <input 
+                type="text" 
+                id="name" 
+                class="form-control"
+                formControlName="name"
+                [class.is-invalid]="officeForm.get('name')?.invalid && (officeForm.get('name')?.dirty || officeForm.get('name')?.touched || submitted)"
+                placeholder="CAMISEA"
+              />
+              <div class="invalid-feedback" *ngIf="officeForm.get('name')?.invalid && (officeForm.get('name')?.dirty || officeForm.get('name')?.touched || submitted)">
+                El nombre de la oficina es requerido
+              </div>              
+            </div>
+
+            <!-- Código de Oficina -->
+            <div class="form-group">
+              <label for="code" class="form-label">
+                Código de Oficina <span class="required">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="code" 
+                class="form-control"
+                [class.is-invalid]="officeForm.get('code')?.invalid && (officeForm.get('code')?.dirty || officeForm.get('code')?.touched || submitted)"
+                placeholder="Ej: BQ-A-001"
+                formControlName="code"
+              />
+              <div class="invalid-feedback" *ngIf="officeForm.get('code')?.invalid && (officeForm.get('code')?.dirty || officeForm.get('code')?.touched || submitted)">
+                El código de oficina es requerido
+              </div>
+            </div>
+            <!-- Estado -->
+            <div class="form-group">
+              <label class="form-label">Estado</label>
+              <div class="toggle-wrapper">
+                <label class="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    formControlName="isActive"
+                  />
+                  <span class="toggle-slider"></span>
+                </label>
+                <div class="toggle-content">
+                  <span class="toggle-title">Oficina Activa</span>
+                  <span class="toggle-description">La oficina se encuentra activa</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Guardar Cambios
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

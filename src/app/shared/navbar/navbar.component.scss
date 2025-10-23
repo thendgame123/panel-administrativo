@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+.app-navbar {
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.75);
+  border-bottom: 1px solid rgba(14, 165, 233, 0.12);
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.08);
+}
+.brand-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--brand, #0ea5e9), var(--brand-700, #0369a1));
+  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.35);
+}
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.nav-link {
+  border-radius: 0.65rem;
+  padding: 0.45rem 0.7rem;
+  font-weight: 500;
+  color: #334155;
+}
+.nav-link:hover {
+  background: rgba(14, 165, 233, 0.08);
+  color: #0f172a;
+}
+.nav-link.active {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0f172a;
+  box-shadow: inset 0 0 0 1px rgba(14, 165, 233, 0.22);
+}
+
+/* Toggler */
+.navbar-toggler {
+  border: 1px solid rgba(2, 132, 199, 0.25);
+}
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.25);
+}
+
+/* Avatar / dropdown */
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #e2e8f0;
+  color: #0f172a;
+  font-weight: 700;
+}
+.dropdown-menu {
+  display: none;
+  min-width: 220px;
+}
+.dropdown-menu.show {
+  display: block;
+}

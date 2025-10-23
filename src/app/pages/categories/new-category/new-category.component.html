@@ -1,0 +1,133 @@
+<div class="categorias-content">
+  <div class="categorias-wrapper">
+    <div class="content-header">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span>Volver</span>
+      </button>
+      <div class="header-left">
+        <h2 class="page-title">Nueva Categoría</h2>
+        <p class="page-description">Completa los datos para crear una nueva categoría</p>
+      </div>
+    </div>
+
+    <div class="content-body">
+      <div class="dashboard-card">
+        <div class="card-header">
+          <div class="card-header-content">
+            <h3 class="card-title">Información de la Categoría</h3>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+            
+            <!-- Campo Título -->
+            <div class="form-group">
+              <label for="titulo" class="form-label">
+                Título <span class="required">*</span>
+              </label>
+              <div class="input-wrapper">
+                <span class="input-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </span>
+                <input 
+                  type="text" 
+                  id="titulo" 
+                  class="form-control"
+                  [class.is-invalid]="categoryForm.get('titulo')?.invalid && (categoryForm.get('titulo')?.dirty || categoryForm.get('titulo')?.touched || submitted)"
+                  placeholder="Ej: Seguridad y Emergencias"
+                  formControlName="titulo"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="categoryForm.get('titulo')?.invalid && (categoryForm.get('titulo')?.dirty || categoryForm.get('titulo')?.touched || submitted)">
+                <span *ngIf="categoryForm.get('titulo')?.errors?.['required']">
+                  El título es requerido
+                </span>
+              </div>
+            </div>
+
+            <!-- Campo Descripción -->
+            <div class="form-group">
+              <label for="descripcion" class="form-label">Descripción</label>
+              <textarea 
+                id="descripcion" 
+                class="form-control"
+                rows="4"
+                placeholder="Describe el contenido que incluirá esta categoría..."
+                formControlName="descripcion"
+              ></textarea>
+            </div>
+
+            <!-- Campo Imagen de Portada -->
+            <div class="form-group">
+              <label for="imagenPortada" class="form-label">Imagen de Portada</label>
+              <input 
+                type="url" 
+                id="imagenPortada" 
+                class="form-control"
+                placeholder="https://ejemplo.com/imagen.jpg"
+                formControlName="imagenPortada"
+              />
+              <div class="form-text">O ingresa la URL de una imagen</div>
+              
+              <div class="file-upload-wrapper">
+                <button type="button" class="btn-upload" (click)="fileInput.click()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  Subir Archivo
+                </button>
+                <input 
+                  #fileInput
+                  type="file" 
+                  accept="image/*"
+                  style="display: none"
+                  (change)="onFileSelected($event)"
+                />
+              </div>
+            </div>
+
+            <!-- Campo Visibilidad -->
+            <div class="form-group">
+              <label class="form-label">Visibilidad</label>
+              <div class="toggle-wrapper">
+                <label class="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    formControlName="categoriaActiva"
+                  />
+                  <span class="toggle-slider"></span>
+                </label>
+                <div class="toggle-content">
+                  <span class="toggle-title">Categoría Activa</span>
+                  <span class="toggle-description">Se mostrará en las pantallas interactivas</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                Crear Categoría
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
